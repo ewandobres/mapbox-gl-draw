@@ -4560,7 +4560,7 @@ DrawPolygon.onStop = function(state) {
     });
   } else {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(modes.DRAW_POLYGON, {}, { silent: true });
+    this.changeMode(modes.SIMPLE_SELECT, {}, { silent: true });
   }
 };
 
