@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="294e7022-0482-4e66-9276-b497e475b4ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modes/draw_polygon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/draw_polygon.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modes/simple_select.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/simple_select.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +45,7 @@
       <updated>1660830983466</updated>
       <workItem from="1660830985057" duration="57000" />
       <workItem from="1660831046197" duration="1083000" />
-      <workItem from="1660832299874" duration="1043000" />
+      <workItem from="1660832299874" duration="1961000" />
     </task>
     <task id="LOCAL-00001" summary="update draw polygon">
       <created>1660831766429</created>
@@ -59,7 +61,21 @@
       <option name="project" value="LOCAL" />
       <updated>1660832476341</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="remove all mode changes">
+      <created>1660833423411</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1660833423411</updated>
+    </task>
+    <task id="LOCAL-00004" summary="remove all mode changes">
+      <created>1660833443972</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1660833443972</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -67,6 +83,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update draw polygon" />
-    <option name="LAST_COMMIT_MESSAGE" value="update draw polygon" />
+    <MESSAGE value="remove all mode changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove all mode changes" />
   </component>
 </project>
