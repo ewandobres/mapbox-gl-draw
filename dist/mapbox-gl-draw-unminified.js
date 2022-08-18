@@ -2611,8 +2611,6 @@ var styles = [
   }
 ];
 
-var SimpleSelect = {};
-
 function isOfMetaType(type) {
   return function(e) {
     var featureTarget = e.featureTarget;
@@ -2803,6 +2801,25 @@ function createSupplementaryPoints(geojson, options, basePath) {
 
   return supplementaryPoints;
 }
+
+var doubleClickZoom = {
+  enable: function enable(ctx) {
+    setTimeout(function () {
+      // First check we've got a map and some context.
+      if (!ctx.map || !ctx.map.doubleClickZoom || !ctx._ctx || !ctx._ctx.store || !ctx._ctx.store.getInitialConfigValue) { return; }
+      // Now check initial state wasn't false (we leave it disabled if so)
+      if (!ctx._ctx.store.getInitialConfigValue('doubleClickZoom')) { return; }
+      ctx.map.doubleClickZoom.enable();
+    }, 0);
+  },
+  disable: function disable(ctx) {
+    setTimeout(function () {
+      if (!ctx.map || !ctx.map.doubleClickZoom) { return; }
+      // Always disable here, as it's necessary in some cases.
+      ctx.map.doubleClickZoom.disable();
+    }, 0);
+  }
+};
 
 var geojsonNormalize = normalize;
 
@@ -3411,25 +3428,6 @@ function constrainFeatureMovement(geojsonFeatures, delta) {
   return constrainedDelta;
 }
 
-var doubleClickZoom = {
-  enable: function enable(ctx) {
-    setTimeout(function () {
-      // First check we've got a map and some context.
-      if (!ctx.map || !ctx.map.doubleClickZoom || !ctx._ctx || !ctx._ctx.store || !ctx._ctx.store.getInitialConfigValue) { return; }
-      // Now check initial state wasn't false (we leave it disabled if so)
-      if (!ctx._ctx.store.getInitialConfigValue('doubleClickZoom')) { return; }
-      ctx.map.doubleClickZoom.enable();
-    }, 0);
-  },
-  disable: function disable(ctx) {
-    setTimeout(function () {
-      if (!ctx.map || !ctx.map.doubleClickZoom) { return; }
-      // Always disable here, as it's necessary in some cases.
-      ctx.map.doubleClickZoom.disable();
-    }, 0);
-  }
-};
-
 function moveFeatures(features, delta) {
   var constrainedDelta = constrainFeatureMovement(features.map(function (feature) { return feature.toGeoJSON(); }), delta);
 
@@ -3460,6 +3458,113 @@ function moveFeatures(features, delta) {
     feature.incomingCoords(nextCoordinates);
   });
 }
+
+var SimpleSelect = {};
+
+SimpleSelect.onSetup = function(opts) {
+  var this$1 = this;
+
+  // turn the opts into state.
+  var state = {
+    dragMoveLocation: null,
+    boxSelectStartLocation: null,
+    boxSelectElement: undefined,
+    boxSelecting: false,
+    canBoxSelect: false,
+    dragMoving: false,
+    canDragMove: false,
+    initiallySelectedFeatureIds: opts.featureIds || []
+  };
+
+  this.setSelected(state.initiallySelectedFeatureIds.filter(function (id) { return this$1.getFeature(id) !== undefined; }));
+  this.fireActionable();
+
+  this.setActionableState({
+    combineFeatures: true,
+    uncombineFeatures: true,
+    trash: true
+  });
+
+  return state;
+};
+
+SimpleSelect.fireUpdate = function() {
+  this.map.fire(events.UPDATE, {
+    action: updateActions.MOVE,
+    features: this.getSelected().map(function (f) { return f.toGeoJSON(); })
+  });
+};
+
+SimpleSelect.fireActionable = function() {
+  var this$1 = this;
+
+  var selectedFeatures = this.getSelected();
+
+  var multiFeatures = selectedFeatures.filter(
+    function (feature) { return this$1.isInstanceOf('MultiFeature', feature); }
+  );
+
+  var combineFeatures = false;
+
+  if (selectedFeatures.length > 1) {
+    combineFeatures = true;
+    var featureType = selectedFeatures[0].type.replace('Multi', '');
+    selectedFeatures.forEach(function (feature) {
+      if (feature.type.replace('Multi', '') !== featureType) {
+        combineFeatures = false;
+      }
+    });
+  }
+
+  var uncombineFeatures = multiFeatures.length > 0;
+  var trash = selectedFeatures.length > 0;
+
+  this.setActionableState({
+    combineFeatures: combineFeatures, uncombineFeatures: uncombineFeatures, trash: trash
+  });
+};
+
+SimpleSelect.getUniqueIds = function(allFeatures) {
+  if (!allFeatures.length) { return []; }
+  var ids = allFeatures.map(function (s) { return s.properties.id; })
+    .filter(function (id) { return id !== undefined; })
+    .reduce(function (memo, id) {
+      memo.add(id);
+      return memo;
+    }, new StringSet());
+
+  return ids.values();
+};
+
+SimpleSelect.stopExtendedInteractions = function(state) {
+  if (state.boxSelectElement) {
+    if (state.boxSelectElement.parentNode) { state.boxSelectElement.parentNode.removeChild(state.boxSelectElement); }
+    state.boxSelectElement = null;
+  }
+
+  this.map.dragPan.enable();
+
+  state.boxSelecting = false;
+  state.canBoxSelect = false;
+  state.dragMoving = false;
+  state.canDragMove = false;
+};
+
+
+SimpleSelect.toDisplayFeatures = function(state, geojson, display) {
+  geojson.properties.active = (this.isSelected(geojson.properties.id)) ?
+    activeStates.ACTIVE : activeStates.INACTIVE;
+  display(geojson);
+  this.fireActionable();
+  if (geojson.properties.active !== activeStates.ACTIVE ||
+    geojson.geometry.type === geojsonTypes.POINT) { return; }
+  createSupplementaryPoints(geojson).forEach(display);
+};
+
+SimpleSelect.onTrash = function() {
+  this.deleteFeature(this.getSelectedIds());
+  this.fireActionable();
+};
 
 var isVertex$1 = isOfMetaType(meta.VERTEX);
 var isMidpoint = isOfMetaType(meta.MIDPOINT);
