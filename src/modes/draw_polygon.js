@@ -34,6 +34,7 @@ DrawPolygon.onSetup = function() {
 
 DrawPolygon.clickAnywhere = function(state, e) {
   if (state.currentVertexPosition > 0 && isEventAtCoordinates(e, state.polygon.coordinates[0][state.currentVertexPosition - 1])) {
+    this.onStop(state);
     return this.changeMode(Constants.modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
   }
   this.updateUIClasses({ mouse: Constants.cursors.ADD });
@@ -43,6 +44,7 @@ DrawPolygon.clickAnywhere = function(state, e) {
 };
 
 DrawPolygon.clickOnVertex = function(state) {
+  this.onStop(state);
   return this.changeMode(Constants.modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
 };
 
