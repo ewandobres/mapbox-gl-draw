@@ -34,7 +34,7 @@ DrawPolygon.onSetup = function() {
 
 DrawPolygon.clickAnywhere = function(state, e) {
   if (state.currentVertexPosition > 0 && isEventAtCoordinates(e, state.polygon.coordinates[0][state.currentVertexPosition - 1])) {
-    return this.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
+    return this.changeMode(Constants.modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
   }
   this.updateUIClasses({ mouse: Constants.cursors.ADD });
   state.polygon.updateCoordinate(`0.${state.currentVertexPosition}`, e.lngLat.lng, e.lngLat.lat);
@@ -43,7 +43,7 @@ DrawPolygon.clickAnywhere = function(state, e) {
 };
 
 DrawPolygon.clickOnVertex = function(state) {
-  return this.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
+  return this.changeMode(Constants.modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
 };
 
 DrawPolygon.onMouseMove = function(state, e) {
@@ -61,9 +61,9 @@ DrawPolygon.onTap = DrawPolygon.onClick = function(state, e) {
 DrawPolygon.onKeyUp = function(state, e) {
   if (CommonSelectors.isEscapeKey(e)) {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(Constants.modes.SIMPLE_SELECT);
+    this.changeMode(Constants.modes.DRAW_POLYGON);
   } else if (CommonSelectors.isEnterKey(e)) {
-    this.changeMode(Constants.modes.SIMPLE_SELECT, { featureIds: [state.polygon.id] });
+    this.changeMode(Constants.modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
   }
 };
 
@@ -83,7 +83,7 @@ DrawPolygon.onStop = function(state) {
     });
   } else {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(Constants.modes.SIMPLE_SELECT, {}, { silent: true });
+    this.changeMode(Constants.modes.DRAW_POLYGON, {}, { silent: true });
   }
 };
 
@@ -135,7 +135,7 @@ DrawPolygon.toDisplayFeatures = function(state, geojson, display) {
 
 DrawPolygon.onTrash = function(state) {
   this.deleteFeature([state.polygon.id], { silent: true });
-  this.changeMode(Constants.modes.SIMPLE_SELECT);
+  this.changeMode(Constants.modes.DRAW_POLYGON);
 };
 
 export default DrawPolygon;
