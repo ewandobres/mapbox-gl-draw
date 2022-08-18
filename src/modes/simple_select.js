@@ -135,15 +135,7 @@ SimpleSelect.clickAnywhere = function (state) {
   this.stopExtendedInteractions(state);
 };
 
-SimpleSelect.clickOnVertex = function(state, e) {
-  // Enter direct select mode
-  this.changeMode(Constants.modes.DIRECT_SELECT, {
-    featureId: e.featureTarget.properties.parent,
-    coordPath: e.featureTarget.properties.coord_path,
-    startPos: e.lngLat
-  });
-  this.updateUIClasses({ mouse: Constants.cursors.MOVE });
-};
+
 
 SimpleSelect.startOnActiveFeature = function(state, e) {
   // Stop any already-underway extended interactions
@@ -169,14 +161,6 @@ SimpleSelect.clickOnFeature = function(state, e) {
   const selectedFeatureIds = this.getSelectedIds();
   const featureId = e.featureTarget.properties.id;
   const isFeatureSelected = this.isSelected(featureId);
-
-  // Click (without shift) on any selected feature but a point
-  if (!isShiftClick && isFeatureSelected && this.getFeature(featureId).type !== Constants.geojsonTypes.POINT) {
-    // Enter direct select mode
-    return this.changeMode(Constants.modes.DIRECT_SELECT, {
-      featureId
-    });
-  }
 
   // Shift-click on a selected feature
   if (isFeatureSelected && isShiftClick) {

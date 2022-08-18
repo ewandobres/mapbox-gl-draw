@@ -76,7 +76,7 @@ DrawPolygon.onStop = function(state) {
     });
   } else {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(Constants.modes.SIMPLE_SELECT, {}, { silent: true });
+    this.changeMode(Constants.modes.DRAW_POLYGON, {}, { silent: true });
   }
 };
 
