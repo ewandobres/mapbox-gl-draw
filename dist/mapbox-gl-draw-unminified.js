@@ -4518,8 +4518,7 @@ DrawPolygon.onSetup = function() {
 
 DrawPolygon.clickAnywhere = function(state, e) {
   if (state.currentVertexPosition > 0 && isEventAtCoordinates(e, state.polygon.coordinates[0][state.currentVertexPosition - 1])) {
-    this.onStop(state);
-    return this.changeMode(modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
+    return this.changeMode(modes.STATIC, { featureIds: [state.polygon.id] });
   }
   this.updateUIClasses({ mouse: cursors.ADD });
   state.polygon.updateCoordinate(("0." + (state.currentVertexPosition)), e.lngLat.lng, e.lngLat.lat);
@@ -4528,8 +4527,7 @@ DrawPolygon.clickAnywhere = function(state, e) {
 };
 
 DrawPolygon.clickOnVertex = function(state) {
-  this.onStop(state);
-  return this.changeMode(modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
+  return this.changeMode(modes.STATIC, { featureIds: [state.polygon.id] });
 };
 
 DrawPolygon.onMouseMove = function(state, e) {
@@ -4547,9 +4545,9 @@ DrawPolygon.onTap = DrawPolygon.onClick = function(state, e) {
 DrawPolygon.onKeyUp = function(state, e) {
   if (isEscapeKey(e)) {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(modes.DRAW_POLYGON);
+    this.changeMode(modes.STATIC);
   } else if (isEnterKey(e)) {
-    this.changeMode(modes.DRAW_POLYGON, { featureIds: [state.polygon.id] });
+    this.changeMode(modes.STATIC, { featureIds: [state.polygon.id] });
   }
 };
 
@@ -4569,7 +4567,7 @@ DrawPolygon.onStop = function(state) {
     });
   } else {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(modes.DRAW_POLYGON, {}, { silent: true });
+    this.changeMode(modes.STATIC, {}, { silent: true });
   }
 };
 
@@ -4621,7 +4619,7 @@ DrawPolygon.toDisplayFeatures = function(state, geojson, display) {
 
 DrawPolygon.onTrash = function(state) {
   this.deleteFeature([state.polygon.id], { silent: true });
-  this.changeMode(modes.DRAW_POLYGON);
+  this.changeMode(modes.STATIC);
 };
 
 var DrawLineString = {};

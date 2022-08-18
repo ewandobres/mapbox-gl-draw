@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="294e7022-0482-4e66-9276-b497e475b4ed" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/modes/draw_freehand.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/modes/newmode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/modes/draw_polygon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/draw_polygon.js" afterDir="false" />
     </list>
@@ -43,7 +45,7 @@
       <updated>1660830983466</updated>
       <workItem from="1660830985057" duration="57000" />
       <workItem from="1660831046197" duration="1083000" />
-      <workItem from="1660832299874" duration="8351000" />
+      <workItem from="1660832299874" duration="9630000" />
     </task>
     <task id="LOCAL-00001" summary="update draw polygon">
       <created>1660831766429</created>
@@ -178,7 +180,21 @@
       <option name="project" value="LOCAL" />
       <updated>1660839932460</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="version3">
+      <created>1660840709792</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1660840709792</updated>
+    </task>
+    <task id="LOCAL-00021" summary="version3">
+      <created>1660840718957</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1660840718957</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
