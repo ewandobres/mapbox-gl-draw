@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="294e7022-0482-4e66-9276-b497e475b4ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/modes/draw_polygon.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/draw_polygon.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modes/simple_select.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/simple_select.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +42,7 @@
       <updated>1660830983466</updated>
       <workItem from="1660830985057" duration="57000" />
       <workItem from="1660831046197" duration="1083000" />
-      <workItem from="1660832299874" duration="2983000" />
+      <workItem from="1660832299874" duration="3285000" />
     </task>
     <task id="LOCAL-00001" summary="update draw polygon">
       <created>1660831766429</created>
@@ -88,7 +86,21 @@
       <option name="project" value="LOCAL" />
       <updated>1660834558478</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="remove all mode changes">
+      <created>1660835333918</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1660835333918</updated>
+    </task>
+    <task id="LOCAL-00008" summary="remove all mode changesaaa">
+      <created>1660835504273</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1660835504273</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -97,6 +109,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update draw polygon" />
     <MESSAGE value="remove all mode changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove all mode changes" />
+    <MESSAGE value="remove all mode changesaaa" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove all mode changesaaa" />
   </component>
 </project>
