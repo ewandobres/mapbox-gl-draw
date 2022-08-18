@@ -2620,6 +2620,12 @@ function isOfMetaType(type) {
   };
 }
 
+function isShiftMousedown(e) {
+  if (!e.originalEvent) { return false; }
+  if (!e.originalEvent.shiftKey) { return false; }
+  return e.originalEvent.button === 0;
+}
+
 function isActiveFeature(e) {
   if (!e.featureTarget) { return false; }
   if (!e.featureTarget.properties) { return false; }
@@ -2636,6 +2642,12 @@ function isInactiveFeature(e) {
 
 function noTarget(e) {
   return e.featureTarget === undefined;
+}
+
+function isFeature(e) {
+  if (!e.featureTarget) { return false; }
+  if (!e.featureTarget.properties) { return false; }
+  return e.featureTarget.properties.meta === meta.FEATURE;
 }
 
 function isVertex(e) {
@@ -2656,6 +2668,333 @@ function isEscapeKey(e) {
 
 function isEnterKey(e) {
   return e.keyCode === 13;
+}
+
+var pointGeometry = Point$1;
+
+/**
+ * A standalone point geometry with useful accessor, comparison, and
+ * modification methods.
+ *
+ * @class Point
+ * @param {Number} x the x-coordinate. this could be longitude or screen
+ * pixels, or any other sort of unit.
+ * @param {Number} y the y-coordinate. this could be latitude or screen
+ * pixels, or any other sort of unit.
+ * @example
+ * var point = new Point(-77, 38);
+ */
+function Point$1(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+Point$1.prototype = {
+
+    /**
+     * Clone this point, returning a new point that can be modified
+     * without affecting the old one.
+     * @return {Point} the clone
+     */
+    clone: function() { return new Point$1(this.x, this.y); },
+
+    /**
+     * Add this point's x & y coordinates to another point,
+     * yielding a new point.
+     * @param {Point} p the other point
+     * @return {Point} output point
+     */
+    add:     function(p) { return this.clone()._add(p); },
+
+    /**
+     * Subtract this point's x & y coordinates to from point,
+     * yielding a new point.
+     * @param {Point} p the other point
+     * @return {Point} output point
+     */
+    sub:     function(p) { return this.clone()._sub(p); },
+
+    /**
+     * Multiply this point's x & y coordinates by point,
+     * yielding a new point.
+     * @param {Point} p the other point
+     * @return {Point} output point
+     */
+    multByPoint:    function(p) { return this.clone()._multByPoint(p); },
+
+    /**
+     * Divide this point's x & y coordinates by point,
+     * yielding a new point.
+     * @param {Point} p the other point
+     * @return {Point} output point
+     */
+    divByPoint:     function(p) { return this.clone()._divByPoint(p); },
+
+    /**
+     * Multiply this point's x & y coordinates by a factor,
+     * yielding a new point.
+     * @param {Point} k factor
+     * @return {Point} output point
+     */
+    mult:    function(k) { return this.clone()._mult(k); },
+
+    /**
+     * Divide this point's x & y coordinates by a factor,
+     * yielding a new point.
+     * @param {Point} k factor
+     * @return {Point} output point
+     */
+    div:     function(k) { return this.clone()._div(k); },
+
+    /**
+     * Rotate this point around the 0, 0 origin by an angle a,
+     * given in radians
+     * @param {Number} a angle to rotate around, in radians
+     * @return {Point} output point
+     */
+    rotate:  function(a) { return this.clone()._rotate(a); },
+
+    /**
+     * Rotate this point around p point by an angle a,
+     * given in radians
+     * @param {Number} a angle to rotate around, in radians
+     * @param {Point} p Point to rotate around
+     * @return {Point} output point
+     */
+    rotateAround:  function(a,p) { return this.clone()._rotateAround(a,p); },
+
+    /**
+     * Multiply this point by a 4x1 transformation matrix
+     * @param {Array<Number>} m transformation matrix
+     * @return {Point} output point
+     */
+    matMult: function(m) { return this.clone()._matMult(m); },
+
+    /**
+     * Calculate this point but as a unit vector from 0, 0, meaning
+     * that the distance from the resulting point to the 0, 0
+     * coordinate will be equal to 1 and the angle from the resulting
+     * point to the 0, 0 coordinate will be the same as before.
+     * @return {Point} unit vector point
+     */
+    unit:    function() { return this.clone()._unit(); },
+
+    /**
+     * Compute a perpendicular point, where the new y coordinate
+     * is the old x coordinate and the new x coordinate is the old y
+     * coordinate multiplied by -1
+     * @return {Point} perpendicular point
+     */
+    perp:    function() { return this.clone()._perp(); },
+
+    /**
+     * Return a version of this point with the x & y coordinates
+     * rounded to integers.
+     * @return {Point} rounded point
+     */
+    round:   function() { return this.clone()._round(); },
+
+    /**
+     * Return the magitude of this point: this is the Euclidean
+     * distance from the 0, 0 coordinate to this point's x and y
+     * coordinates.
+     * @return {Number} magnitude
+     */
+    mag: function() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    },
+
+    /**
+     * Judge whether this point is equal to another point, returning
+     * true or false.
+     * @param {Point} other the other point
+     * @return {boolean} whether the points are equal
+     */
+    equals: function(other) {
+        return this.x === other.x &&
+               this.y === other.y;
+    },
+
+    /**
+     * Calculate the distance from this point to another point
+     * @param {Point} p the other point
+     * @return {Number} distance
+     */
+    dist: function(p) {
+        return Math.sqrt(this.distSqr(p));
+    },
+
+    /**
+     * Calculate the distance from this point to another point,
+     * without the square root step. Useful if you're comparing
+     * relative distances.
+     * @param {Point} p the other point
+     * @return {Number} distance
+     */
+    distSqr: function(p) {
+        var dx = p.x - this.x,
+            dy = p.y - this.y;
+        return dx * dx + dy * dy;
+    },
+
+    /**
+     * Get the angle from the 0, 0 coordinate to this point, in radians
+     * coordinates.
+     * @return {Number} angle
+     */
+    angle: function() {
+        return Math.atan2(this.y, this.x);
+    },
+
+    /**
+     * Get the angle from this point to another point, in radians
+     * @param {Point} b the other point
+     * @return {Number} angle
+     */
+    angleTo: function(b) {
+        return Math.atan2(this.y - b.y, this.x - b.x);
+    },
+
+    /**
+     * Get the angle between this point and another point, in radians
+     * @param {Point} b the other point
+     * @return {Number} angle
+     */
+    angleWith: function(b) {
+        return this.angleWithSep(b.x, b.y);
+    },
+
+    /*
+     * Find the angle of the two vectors, solving the formula for
+     * the cross product a x b = |a||b|sin(θ) for θ.
+     * @param {Number} x the x-coordinate
+     * @param {Number} y the y-coordinate
+     * @return {Number} the angle in radians
+     */
+    angleWithSep: function(x, y) {
+        return Math.atan2(
+            this.x * y - this.y * x,
+            this.x * x + this.y * y);
+    },
+
+    _matMult: function(m) {
+        var x = m[0] * this.x + m[1] * this.y,
+            y = m[2] * this.x + m[3] * this.y;
+        this.x = x;
+        this.y = y;
+        return this;
+    },
+
+    _add: function(p) {
+        this.x += p.x;
+        this.y += p.y;
+        return this;
+    },
+
+    _sub: function(p) {
+        this.x -= p.x;
+        this.y -= p.y;
+        return this;
+    },
+
+    _mult: function(k) {
+        this.x *= k;
+        this.y *= k;
+        return this;
+    },
+
+    _div: function(k) {
+        this.x /= k;
+        this.y /= k;
+        return this;
+    },
+
+    _multByPoint: function(p) {
+        this.x *= p.x;
+        this.y *= p.y;
+        return this;
+    },
+
+    _divByPoint: function(p) {
+        this.x /= p.x;
+        this.y /= p.y;
+        return this;
+    },
+
+    _unit: function() {
+        this._div(this.mag());
+        return this;
+    },
+
+    _perp: function() {
+        var y = this.y;
+        this.y = this.x;
+        this.x = -y;
+        return this;
+    },
+
+    _rotate: function(angle) {
+        var cos = Math.cos(angle),
+            sin = Math.sin(angle),
+            x = cos * this.x - sin * this.y,
+            y = sin * this.x + cos * this.y;
+        this.x = x;
+        this.y = y;
+        return this;
+    },
+
+    _rotateAround: function(angle, p) {
+        var cos = Math.cos(angle),
+            sin = Math.sin(angle),
+            x = p.x + cos * (this.x - p.x) - sin * (this.y - p.y),
+            y = p.y + sin * (this.x - p.x) + cos * (this.y - p.y);
+        this.x = x;
+        this.y = y;
+        return this;
+    },
+
+    _round: function() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        return this;
+    }
+};
+
+/**
+ * Construct a point from an array if necessary, otherwise if the input
+ * is already a Point, or an unknown type, return it unchanged
+ * @param {Array<Number>|Point|*} a any kind of input value
+ * @return {Point} constructed point, or passed-through value.
+ * @example
+ * // this
+ * var point = Point.convert([0, 1]);
+ * // is equivalent to
+ * var point = new Point(0, 1);
+ */
+Point$1.convert = function (a) {
+    if (a instanceof Point$1) {
+        return a;
+    }
+    if (Array.isArray(a)) {
+        return new Point$1(a[0], a[1]);
+    }
+    return a;
+};
+
+/**
+ * Returns a Point representing a mouse event's position
+ * relative to a containing element.
+ *
+ * @param {MouseEvent} mouseEvent
+ * @param {Node} container
+ * @returns {Point}
+ */
+function mouseEventPoint(mouseEvent, container) {
+  var rect = container.getBoundingClientRect();
+  return new pointGeometry(
+    mouseEvent.clientX - rect.left - (container.clientLeft || 0),
+    mouseEvent.clientY - rect.top - (container.clientTop || 0)
+  );
 }
 
 /**
@@ -3550,6 +3889,204 @@ SimpleSelect.stopExtendedInteractions = function(state) {
   state.canDragMove = false;
 };
 
+SimpleSelect.onStop = function() {
+  doubleClickZoom.enable(this);
+};
+
+SimpleSelect.onMouseMove = function(state) {
+  // On mousemove that is not a drag, stop extended interactions.
+  // This is useful if you drag off the canvas, release the button,
+  // then move the mouse back over the canvas --- we don't allow the
+  // interaction to continue then, but we do let it continue if you held
+  // the mouse button that whole time
+  this.stopExtendedInteractions(state);
+
+  // Skip render
+  return true;
+};
+
+SimpleSelect.onMouseOut = function(state) {
+  // As soon as you mouse leaves the canvas, update the feature
+  if (state.dragMoving) { return this.fireUpdate(); }
+
+  // Skip render
+  return true;
+};
+
+SimpleSelect.onTap = SimpleSelect.onClick = function(state, e) {
+  // Click (with or without shift) on no feature
+  if (noTarget(e)) { return this.clickAnywhere(state, e); } // also tap
+  if (isOfMetaType(meta.VERTEX)(e)) { return this.clickOnVertex(state, e); } //tap
+  if (isFeature(e)) { return this.clickOnFeature(state, e); }
+};
+
+SimpleSelect.clickAnywhere = function (state) {
+  var this$1 = this;
+
+  // Clear the re-render selection
+  var wasSelected = this.getSelectedIds();
+  if (wasSelected.length) {
+    this.clearSelectedFeatures();
+    wasSelected.forEach(function (id) { return this$1.doRender(id); });
+  }
+  doubleClickZoom.enable(this);
+  this.stopExtendedInteractions(state);
+};
+
+SimpleSelect.clickOnVertex = function(state, e) {
+  // Enter direct select mode
+  this.changeMode(modes.DIRECT_SELECT, {
+    featureId: e.featureTarget.properties.parent,
+    coordPath: e.featureTarget.properties.coord_path,
+    startPos: e.lngLat
+  });
+  this.updateUIClasses({ mouse: cursors.MOVE });
+};
+
+SimpleSelect.startOnActiveFeature = function(state, e) {
+  // Stop any already-underway extended interactions
+  this.stopExtendedInteractions(state);
+
+  // Disable map.dragPan immediately so it can't start
+  this.map.dragPan.disable();
+
+  // Re-render it and enable drag move
+  this.doRender(e.featureTarget.properties.id);
+
+  // Set up the state for drag moving
+  state.canDragMove = true;
+  state.dragMoveLocation = e.lngLat;
+};
+
+SimpleSelect.clickOnFeature = function(state, e) {
+  var this$1 = this;
+
+  // Stop everything
+  doubleClickZoom.disable(this);
+  this.stopExtendedInteractions(state);
+
+  var isShiftClick = isShiftDown(e);
+  var selectedFeatureIds = this.getSelectedIds();
+  var featureId = e.featureTarget.properties.id;
+  var isFeatureSelected = this.isSelected(featureId);
+
+  // Click (without shift) on any selected feature but a point
+  if (!isShiftClick && isFeatureSelected && this.getFeature(featureId).type !== geojsonTypes.POINT) {
+    // Enter direct select mode
+    return this.changeMode(modes.DIRECT_SELECT, {
+      featureId: featureId
+    });
+  }
+
+  // Shift-click on a selected feature
+  if (isFeatureSelected && isShiftClick) {
+    // Deselect it
+    this.deselect(featureId);
+    this.updateUIClasses({ mouse: cursors.POINTER });
+    if (selectedFeatureIds.length === 1) {
+      doubleClickZoom.enable(this);
+    }
+  // Shift-click on an unselected feature
+  } else if (!isFeatureSelected && isShiftClick) {
+    // Add it to the selection
+    this.select(featureId);
+    this.updateUIClasses({ mouse: cursors.MOVE });
+  // Click (without shift) on an unselected feature
+  } else if (!isFeatureSelected && !isShiftClick) {
+    // Make it the only selected feature
+    selectedFeatureIds.forEach(function (id) { return this$1.doRender(id); });
+    this.setSelected(featureId);
+    this.updateUIClasses({ mouse: cursors.MOVE });
+  }
+
+  // No matter what, re-render the clicked feature
+  this.doRender(featureId);
+};
+
+SimpleSelect.onMouseDown = function(state, e) {
+  if (isActiveFeature(e)) { return this.startOnActiveFeature(state, e); }
+  if (this.drawConfig.boxSelect && isShiftMousedown(e)) { return this.startBoxSelect(state, e); }
+};
+
+SimpleSelect.startBoxSelect = function(state, e) {
+  this.stopExtendedInteractions(state);
+  this.map.dragPan.disable();
+  // Enable box select
+  state.boxSelectStartLocation = mouseEventPoint(e.originalEvent, this.map.getContainer());
+  state.canBoxSelect = true;
+};
+
+SimpleSelect.onTouchStart = function(state, e) {
+  if (isActiveFeature(e)) { return this.startOnActiveFeature(state, e); }
+};
+
+SimpleSelect.onDrag = function(state, e) {
+  if (state.canDragMove) { return this.dragMove(state, e); }
+  if (this.drawConfig.boxSelect && state.canBoxSelect) { return this.whileBoxSelect(state, e); }
+};
+
+SimpleSelect.whileBoxSelect = function(state, e) {
+  state.boxSelecting = true;
+  this.updateUIClasses({ mouse: cursors.ADD });
+
+  // Create the box node if it doesn't exist
+  if (!state.boxSelectElement) {
+    state.boxSelectElement = document.createElement('div');
+    state.boxSelectElement.classList.add(classes.BOX_SELECT);
+    this.map.getContainer().appendChild(state.boxSelectElement);
+  }
+
+  // Adjust the box node's width and xy position
+  var current = mouseEventPoint(e.originalEvent, this.map.getContainer());
+  var minX = Math.min(state.boxSelectStartLocation.x, current.x);
+  var maxX = Math.max(state.boxSelectStartLocation.x, current.x);
+  var minY = Math.min(state.boxSelectStartLocation.y, current.y);
+  var maxY = Math.max(state.boxSelectStartLocation.y, current.y);
+  var translateValue = "translate(" + minX + "px, " + minY + "px)";
+  state.boxSelectElement.style.transform = translateValue;
+  state.boxSelectElement.style.WebkitTransform = translateValue;
+  state.boxSelectElement.style.width = (maxX - minX) + "px";
+  state.boxSelectElement.style.height = (maxY - minY) + "px";
+};
+
+SimpleSelect.dragMove = function(state, e) {
+  // Dragging when drag move is enabled
+  state.dragMoving = true;
+  e.originalEvent.stopPropagation();
+
+  var delta = {
+    lng: e.lngLat.lng - state.dragMoveLocation.lng,
+    lat: e.lngLat.lat - state.dragMoveLocation.lat
+  };
+
+  moveFeatures(this.getSelected(), delta);
+
+  state.dragMoveLocation = e.lngLat;
+};
+
+SimpleSelect.onTouchEnd = SimpleSelect.onMouseUp = function(state, e) {
+  var this$1 = this;
+
+  // End any extended interactions
+  if (state.dragMoving) {
+    this.fireUpdate();
+  } else if (state.boxSelecting) {
+    var bbox = [
+      state.boxSelectStartLocation,
+      mouseEventPoint(e.originalEvent, this.map.getContainer())
+    ];
+    var featuresInBox = this.featuresAt(null, bbox, 'click');
+    var idsToSelect = this.getUniqueIds(featuresInBox)
+      .filter(function (id) { return !this$1.isSelected(id); });
+
+    if (idsToSelect.length) {
+      this.select(idsToSelect);
+      idsToSelect.forEach(function (id) { return this$1.doRender(id); });
+      this.updateUIClasses({ mouse: cursors.MOVE });
+    }
+  }
+  this.stopExtendedInteractions(state);
+};
 
 SimpleSelect.toDisplayFeatures = function(state, geojson, display) {
   geojson.properties.active = (this.isSelected(geojson.properties.id)) ?
@@ -3563,6 +4100,88 @@ SimpleSelect.toDisplayFeatures = function(state, geojson, display) {
 
 SimpleSelect.onTrash = function() {
   this.deleteFeature(this.getSelectedIds());
+  this.fireActionable();
+};
+
+SimpleSelect.onCombineFeatures = function() {
+  var selectedFeatures = this.getSelected();
+
+  if (selectedFeatures.length === 0 || selectedFeatures.length < 2) { return; }
+
+  var coordinates = [], featuresCombined = [];
+  var featureType = selectedFeatures[0].type.replace('Multi', '');
+
+  for (var i = 0; i < selectedFeatures.length; i++) {
+    var feature = selectedFeatures[i];
+
+    if (feature.type.replace('Multi', '') !== featureType) {
+      return;
+    }
+    if (feature.type.includes('Multi')) {
+      feature.getCoordinates().forEach(function (subcoords) {
+        coordinates.push(subcoords);
+      });
+    } else {
+      coordinates.push(feature.getCoordinates());
+    }
+
+    featuresCombined.push(feature.toGeoJSON());
+  }
+
+  if (featuresCombined.length > 1) {
+    var multiFeature = this.newFeature({
+      type: geojsonTypes.FEATURE,
+      properties: featuresCombined[0].properties,
+      geometry: {
+        type: ("Multi" + featureType),
+        coordinates: coordinates
+      }
+    });
+
+    this.addFeature(multiFeature);
+    this.deleteFeature(this.getSelectedIds(), { silent: true });
+    this.setSelected([multiFeature.id]);
+
+    this.map.fire(events.COMBINE_FEATURES, {
+      createdFeatures: [multiFeature.toGeoJSON()],
+      deletedFeatures: featuresCombined
+    });
+  }
+  this.fireActionable();
+};
+
+SimpleSelect.onUncombineFeatures = function() {
+  var this$1 = this;
+
+  var selectedFeatures = this.getSelected();
+  if (selectedFeatures.length === 0) { return; }
+
+  var createdFeatures = [];
+  var featuresUncombined = [];
+
+  var loop = function ( i ) {
+    var feature = selectedFeatures[i];
+
+    if (this$1.isInstanceOf('MultiFeature', feature)) {
+      feature.getFeatures().forEach(function (subFeature) {
+        this$1.addFeature(subFeature);
+        subFeature.properties = feature.properties;
+        createdFeatures.push(subFeature.toGeoJSON());
+        this$1.select([subFeature.id]);
+      });
+      this$1.deleteFeature(feature.id, { silent: true });
+      featuresUncombined.push(feature.toGeoJSON());
+    }
+  };
+
+  for (var i = 0; i < selectedFeatures.length; i++) loop( i );
+
+  if (createdFeatures.length > 1) {
+    this.map.fire(events.UNCOMBINE_FEATURES, {
+      createdFeatures: createdFeatures,
+      deletedFeatures: featuresUncombined
+    });
+  }
   this.fireActionable();
 };
 

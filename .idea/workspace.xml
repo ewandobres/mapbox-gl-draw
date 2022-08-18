@@ -40,7 +40,7 @@
       <updated>1660830983466</updated>
       <workItem from="1660830985057" duration="57000" />
       <workItem from="1660831046197" duration="1083000" />
-      <workItem from="1660832299874" duration="5398000" />
+      <workItem from="1660832299874" duration="5918000" />
     </task>
     <task id="LOCAL-00001" summary="update draw polygon">
       <created>1660831766429</created>
@@ -147,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660837553968</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="version3">
+      <created>1660837907757</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1660837907757</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
