@@ -186,12 +186,12 @@ SimpleSelect.clickOnFeature = function(state, e) {
     if (selectedFeatureIds.length === 1) {
       doubleClickZoom.enable(this);
     }
-  // Shift-click on an unselected feature
+    // Shift-click on an unselected feature
   } else if (!isFeatureSelected && isShiftClick) {
     // Add it to the selection
     this.select(featureId);
     this.updateUIClasses({ mouse: Constants.cursors.MOVE });
-  // Click (without shift) on an unselected feature
+    // Click (without shift) on an unselected feature
   } else if (!isFeatureSelected && !isShiftClick) {
     // Make it the only selected feature
     selectedFeatureIds.forEach(id => this.doRender(id));
