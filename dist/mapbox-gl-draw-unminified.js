@@ -3550,22 +3550,6 @@ SimpleSelect.stopExtendedInteractions = function(state) {
   state.canDragMove = false;
 };
 
-SimpleSelect.onStop = function() {
-  doubleClickZoom.enable(this);
-};
-
-SimpleSelect.onMouseMove = function(state) {
-  // On mousemove that is not a drag, stop extended interactions.
-  // This is useful if you drag off the canvas, release the button,
-  // then move the mouse back over the canvas --- we don't allow the
-  // interaction to continue then, but we do let it continue if you held
-  // the mouse button that whole time
-  this.stopExtendedInteractions(state);
-
-  // Skip render
-  return true;
-};
-
 var isVertex$1 = isOfMetaType(meta.VERTEX);
 var isMidpoint = isOfMetaType(meta.MIDPOINT);
 
@@ -3941,7 +3925,7 @@ DrawPolygon.onStop = function(state) {
     });
   } else {
     this.deleteFeature([state.polygon.id], { silent: true });
-    this.changeMode(modes.SIMPLE_SELECT, {}, { silent: true });
+    this.changeMode(modes.DRAW_POLYGON, {}, { silent: true });
   }
 };
 

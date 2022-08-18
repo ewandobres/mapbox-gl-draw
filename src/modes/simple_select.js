@@ -93,21 +93,5 @@ SimpleSelect.stopExtendedInteractions = function(state) {
   state.canDragMove = false;
 };
 
-SimpleSelect.onStop = function() {
-  doubleClickZoom.enable(this);
-};
-
-SimpleSelect.onMouseMove = function(state) {
-  // On mousemove that is not a drag, stop extended interactions.
-  // This is useful if you drag off the canvas, release the button,
-  // then move the mouse back over the canvas --- we don't allow the
-  // interaction to continue then, but we do let it continue if you held
-  // the mouse button that whole time
-  this.stopExtendedInteractions(state);
-
-  // Skip render
-  return true;
-};
-
 
 export default SimpleSelect;
