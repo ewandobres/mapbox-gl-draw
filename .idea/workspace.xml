@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="294e7022-0482-4e66-9276-b497e475b4ed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/mapbox-gl-draw-unminified.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modes/simple_select.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/modes/simple_select.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +59,7 @@
       <workItem from="1660842928656" duration="1364000" />
       <workItem from="1660937900646" duration="598000" />
       <workItem from="1661512725151" duration="598000" />
-      <workItem from="1661686340513" duration="2072000" />
+      <workItem from="1661686340513" duration="2835000" />
     </task>
     <task id="LOCAL-00001" summary="update draw polygon">
       <created>1660831766429</created>
@@ -230,11 +229,29 @@
       <option name="project" value="LOCAL" />
       <updated>1660843027179</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="select fix">
+      <created>1661691995061</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1661691995061</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update draw polygon" />
